@@ -53,25 +53,47 @@ def main():
     args = parser.parse_args()
 
     f_dir = "df"
+    output_dir = "pickle_jars"
 
     if args.Directory:
         f_dir = args.Directory
     else:
-        print("Enter directory name bozo")
+        print("Enter the directory name bozo")
         exit()
 
     print(f_dir)
 
-    pickle_jar = jar_pickles(f_dir)
-    
-    np.savez(
-        f"{f_dir}.npz",
-        timestamps=pickle_jar["timestamps"],
-        pressures=pickle_jar["pressures"],
-        joint_positions=pickle_jar["joint_positions"],
-        joint_velocities=pickle_jar["joint_velocities"],
-        net_velocities=pickle_jar["net_velocities"],
-    )
+    materials = [m for m in os.listdir(f_dir) if os.path.isdir(os.path.join(f_dir, m))]
+
+    for m in materials:
+        material_path = os.path.join(f_dir, m)
+        print(f"going to jar {material_path}")
+
+        samples = [s for s in os.listdir(material_path) if os.path.isdir(os.path.join(material_path, s))]
+
+        for s in samples:
+            sample_path = os.path.join(material_path, s)
+            print(f"jarring {sample_path}")
+
+            try:
+                pickle_jar = jar_pickles(sample_path)
+                print(f"pickles in {sample_path} have been jarred!")
+                out_dir = os.path.join(output_dir, m)
+                os.makedirs(out_dir, exist_ok=True)
+                out_path = os.path.join(out_dir, f"{s}.npz")
+                print(f"writing jar to {out_path}")
+
+                np.savez(
+                    out_path,
+                    timestamps=pickle_jar["timestamps"],
+                    pressures=pickle_jar["pressures"],
+                    joint_positions=pickle_jar["joint_positions"],
+                    joint_velocities=pickle_jar["joint_velocities"],
+                    net_velocities=pickle_jar["net_velocities"],
+                )
+
+            except Exception as e:
+                print(f"Exception for {s}: {e}")
 
 if __name__ == "__main__":
     main()
