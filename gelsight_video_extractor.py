@@ -39,25 +39,5 @@ def main():
                     dest_path = os.path.join(output_dir, video_name)
                     shutil.copy(src_path, dest_path)
 
-            # try:
-            #     pickle_jar = jar_pickles(sample_path)
-            #     print(f"pickles in {sample_path} have been jarred!")
-            #     out_dir = os.path.join(output_dir, m)
-            #     os.makedirs(out_dir, exist_ok=True)
-            #     out_path = os.path.join(out_dir, f"{s}.npz")
-            #     print(f"writing jar to {out_path}")
-
-            #     np.savez(
-            #         out_path,
-            #         timestamps=pickle_jar["timestamps"],
-            #         pressures=pickle_jar["pressures"],
-            #         joint_positions=pickle_jar["joint_positions"],
-            #         joint_velocities=pickle_jar["joint_velocities"],
-            #         net_velocities=pickle_jar["net_velocities"],
-            #     )
-
-            # except Exception as e:
-            #     print(f"Exception for {s}: {e}")
-
 if __name__ == "__main__":
     main()
