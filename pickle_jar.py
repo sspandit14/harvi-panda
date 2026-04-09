@@ -49,19 +49,17 @@ def jar_pickles(d_name):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-dir", "--Directory")
+    parser.add_argument("-in_dir", "--InDir", required=True, help="Directory to Read Samples To Be Jarred From")
+    parser.add_argument("-out_dir", "--OutDir", required=True, help="Directory to Store Jars")
     args = parser.parse_args()
 
-    f_dir = "df"
-    output_dir = "pickle_jars"
+    f_dir = args.InDir
+    output_dir = args.OutDir
 
-    if args.Directory:
-        f_dir = args.Directory
-    else:
-        print("Enter the directory name bozo")
-        exit()
+    os.makedirs(output_dir, exist_ok=True)
 
     print(f_dir)
+    print(output_dir)
 
     materials = [m for m in os.listdir(f_dir) if os.path.isdir(os.path.join(f_dir, m))]
 

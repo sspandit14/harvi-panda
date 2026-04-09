@@ -1,11 +1,31 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import argparse
 
-print("pickles plotting...")
+print("plotting pickles...")
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-in_dir", "--InDir", required=True, help="Directory to Read Jars to be Plotted")
+parser.add_argument("-out_dir", "--OutDir", required=True, help="Directory to Store Visuals")
+args = parser.parse_args()
 
 pickle_jars_dir = "./pickle_jars"
 visual_jars_dir = "./pickle_jar_visuals"
+
+in_dir = args.InDir
+out_dir = args.OutDir
+
+pickle_jars_dir = os.path.join(pickle_jars_dir, in_dir)
+visual_jars_dir = os.path.join(visual_jars_dir, out_dir)
+visual_jars_aio_dir = os.path.join(visual_jars_dir, "all-in-one")
+
+if not os.path.exists(pickle_jars_dir):
+    print(f"input directory doesn't exist...")
+    exit()
+
+os.makedirs(visual_jars_dir, exist_ok=True)
+os.makedirs(visual_jars_aio_dir, exist_ok=True)
 
 material_jars = [m for m in os.listdir(pickle_jars_dir) if os.path.isdir(os.path.join(pickle_jars_dir, m))]
 print(material_jars)
@@ -36,11 +56,12 @@ for mat_jar in material_jars:
         plt.ylabel("Pressure")
         plt.title("Pressure vs Time")
         plt.ylim(bottom=0)
-        plt.ylim(top=25)
+        plt.ylim(top=30)
         plt.xlim(left=0)
         out_path = os.path.join(out_dir, f"{s_name}_TP.png")
         plt.savefig(out_path)
-        plt.savefig(f"./pickle_jar_visuals/all-in-one/{s_name}_TP.png")
+        aio_path = os.path.join(visual_jars_aio_dir, f"{mat_jar}_{s_name}_TP.png")
+        plt.savefig(aio_path)
         plt.close()
 
         plt.figure()
@@ -50,7 +71,8 @@ for mat_jar in material_jars:
         plt.xlim(left=0)
         out_path = os.path.join(out_dir, f"{s_name}_TNV.png")
         plt.savefig(out_path)
-        plt.savefig(f"./pickle_jar_visuals/all-in-one/{s_name}_TNV.png")
+        aio_path = os.path.join(visual_jars_aio_dir, f"{mat_jar}_{s_name}_TNV.png")
+        plt.savefig(aio_path)
         plt.close()
 
 print("pickles plotted!")
