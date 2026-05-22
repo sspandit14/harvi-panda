@@ -10,15 +10,33 @@ class FrameBundle:
     timestamp_s: float
 
 class D435_Helper:
-    def __init__(self, width:int=640, height:int=480, fps:int=15):
+    def __init__(self, width:int=640, height:int=480, fps:int=30):
         self.width = width
         self.height = height
+
+        # ctx = rs.context()
+        # devices = ctx.query_devices()
+
+        # if len(devices) == 0:
+        #     print("No realsense devices found... rip...")
+        #     return
+        
+        # print("Connected realsense devices:")
+        # for d in devices:
+        #     name = d.get_info(rs.camera_info.name)
+        #     serial = d.get_info(rs.camera_info.serial_number)
+        #     print(f" - {name} ({serial})")
+
+        #     for sensor_idx, sensor in enumerate(d.query_sensors()):
+        #         print(f" Sensor {sensor_idx}:")
+        #         for p in sensor.profiles:
+        #             print(f"    {p}")
         
         self.pipeline = rs.pipeline()
 
         self.config = rs.config()
         self.config.enable_stream(rs.stream.color, width, height, rs.format.bgr8, fps)
-        self.config.enable_stream(rs.stream.color, width, height, rs.format.z16, fps)
+        self.config.enable_stream(rs.stream.depth, width, height, rs.format.z16, fps)
 
         self.align = rs.align(rs.stream.color)
 
@@ -28,7 +46,7 @@ class D435_Helper:
     def start(self) -> None:
         if self.camera_started:
             return
-        
+
         self.profile = self.pipeline.start(self.config)
         self.camera_started = True
 
