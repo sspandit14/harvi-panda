@@ -1,1 +1,5 @@
-venv
+venv/
+.venv/
+pickle_jar_visuals/
+pickle_jars/
+__pycache__/
