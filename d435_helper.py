@@ -14,24 +14,27 @@ class D435_Helper:
         self.width = width
         self.height = height
 
-        # ctx = rs.context()
-        # devices = ctx.query_devices()
+        debug = False
 
-        # if len(devices) == 0:
-        #     print("No realsense devices found... rip...")
-        #     return
-        
-        # print("Connected realsense devices:")
-        # for d in devices:
-        #     name = d.get_info(rs.camera_info.name)
-        #     serial = d.get_info(rs.camera_info.serial_number)
-        #     print(f" - {name} ({serial})")
+        if debug:
+            ctx = rs.context()
+            devices = ctx.query_devices()
 
-        #     for sensor_idx, sensor in enumerate(d.query_sensors()):
-        #         print(f" Sensor {sensor_idx}:")
-        #         for p in sensor.profiles:
-        #             print(f"    {p}")
-        
+            if len(devices) == 0:
+                print("No realsense devices found... rip...")
+                return
+            
+            print("Connected realsense devices:")
+            for d in devices:
+                name = d.get_info(rs.camera_info.name)
+                serial = d.get_info(rs.camera_info.serial_number)
+                print(f" - {name} ({serial})")
+
+                for sensor_idx, sensor in enumerate(d.query_sensors()):
+                    print(f" Sensor {sensor_idx}:")
+                    for p in sensor.profiles:
+                        print(f"    {p}")
+            
         self.pipeline = rs.pipeline()
 
         self.config = rs.config()
@@ -48,6 +51,8 @@ class D435_Helper:
             return
 
         self.profile = self.pipeline.start(self.config)
+
+        debug = False
         self.camera_started = True
 
     def stop(self) -> None:
